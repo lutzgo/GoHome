@@ -42,6 +42,24 @@
             )
             userNames
           );
+
+          # Add devShells here
+          devShells.default = pkgs.mkShell {
+            imports = [ ];
+            # Add packages or environment variables here
+            packages = with pkgs; [
+              # Add direnv here, but you can add other packages if you need them in dev shell.
+              direnv
+              git
+              # For example, for developing with python you can add:
+              # python3
+            ];
+            shellHook = ''
+              # optional, if you need to change the prompt.
+              echo "Welcome to the development shell!"
+            '';
+          };
+
         };
 
       flake = {
