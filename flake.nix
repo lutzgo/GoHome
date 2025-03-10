@@ -18,7 +18,11 @@
 
       perSystem = { pkgs, ... }:
         let
-          userNames = [ "lgo" "otheruser" ]; # Define the list of users here
+        # Define the list of users here
+          userNames = [
+            "lgo"
+            "sgo"
+          ]; 
         in
         {
           legacyPackages.homeConfigurations = builtins.listToAttrs (
@@ -32,10 +36,7 @@
                     imports = [ self.homeModules."${userName}" ]; # import user specific module
                     home.username = userName;
                     home.homeDirectory = "/${if pkgs.stdenv.isDarwin then "Users" else "home"}/${userName}";
-                    home.stateVersion = "22.11";
-                    # Define default programs for all user here or you can leave it empty.
-                    # For Example:
-                    # programs.git.enable = true;
+                    home.stateVersion = "25.05";
                   });
               }
             )
@@ -44,35 +45,14 @@
         };
 
       flake = {
-        # All home-manager configurations are kept here.
+        # All home-manager configurations are listed here.
         homeModules = {
-            # The default configuration, can be used as fallback for any user,
-            # or if you only have one user.
-            default = { pkgs, ... }: {
-              imports = [ ];
-              programs = {
-                # These are default programs for all users
-                # git.enable = true; 
-              };
-            };
-            lgo = { pkgs, ... }: {
-              imports = [ ];
-              programs = {
-                git.enable = true;
-                starship.enable = true;
-                bash.enable = true;
-              };
-            };
-            otheruser = { pkgs, ... }: {
-              imports = [ ];
-              programs = {
-                git.enable = false;  # different config for otheruser
-                #starship.enable = true;
-                zsh.enable = true;
-                #bash.enable = true;
-              };
-            };
-          };
+          # The default configuration, can be used as fallback for any user,
+          # or if you only have one user.
+          default = import ./modules/shared;
+          lgo = import ./modules/lgo;
+          otheruser = import ./modules/sgo;
+        };
       };
     };
 }
